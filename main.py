@@ -140,6 +140,8 @@ async def dsopinioes(ctx:commands.Context):
                  'Talvez mas...', 
                  'Pior que é',
                  'Viajou mano',
+                 'Talvez',
+                 'Acho que sim',
                  'Se tu diz...',
                  'Negativo',
                  'Verdade',
@@ -151,13 +153,17 @@ async def dsopinioes(ctx:commands.Context):
                  ':)',
                  'Talvez exista a possibilidade de quem sabe possivelmente se Deus quiser provavelmente aconteça que por acaso possa ser que seja verdade...']
     # variável peso dando a probabilidade de cada uma das frases do vetor
-    pesos = [5,5,5,5,5,5,5,5,5,5,5,2,2,0.5,1]
+    pesos = [5,5,5,5,5,5,5,5,5,5,5,5,5,2,2,0.5,1]
     # variavel mensagem_escolhida é uma escolha aleatória tendo em mente as mensagens e o peso de cada
     # k=1 define que queremos apenas um elemento aleatório, e [0] nos dá esse único elemento
     mensagem_escolhida = random.choices(mensagens, weights=pesos, k=1)[0]
+    # Se estiver respondendo uma mensagem
     if ctx.message.reference:
+        # Vai pegar a mensagem respondida
         referenced_message = await ctx.channel.fetch_message(ctx.message.reference.message_id)
+        # Envia a mensagem para a mensagem respondida
         await referenced_message.reply(mensagem_escolhida)
+        # Deleta a mensagem enviando o comando
         await ctx.message.delete();
     else:
         await ctx.send(mensagem_escolhida)
@@ -332,14 +338,6 @@ async def on_guild_channel_delete(channel):
 
 
 
-
-respostas = {
-    'cazum9': '🤫 🧏‍♂️',
-    'dsbota': 'Esse não.',
-    'oi dsmota': 'e eu?',
-    'oi dsbot': 'ola :]'
-}
-
 #--- CONTAGENS ---
 @bot.event
 async def on_message(message):
@@ -363,18 +361,77 @@ async def on_message(message):
             await message.delete()
             canal_cont = canal_cont
             return
-        
 
-    #--- Resposta automática ---
-    olas = ['Oi', 'Ola', 'Opa', 'Fala']
-    pesos = [5,5,5,5]
-    mensagem_escolhida = random.choices(olas, weights = pesos, k=1)[0]
-        #Verifica se o bot foi mencionado
+
+    #---- Resposta automática ----
+    
+
+    #Verifica se o bot foi mencionado
     if bot.user.mentioned_in(message):
+        # Se marcar a mensagem do bot:
+        if message.reference:
+            referenced_message = await message.channel.fetch_message(message.reference.message_id)
+            mensagens = ['Ta.',
+                    'Se quiser sim mano',
+                    'Acho que sim'
+                    'Talvez mas...',
+                    'Talvez',
+                    'Pior que é',
+                    'Se tu diz...',
+                    'Negativo',
+                    'Verdade',
+                    'Não, nd ver isso daí',
+                    'É oq mano?',
+                    'Papo reto',
+                    'Nah id win',
+                    'NUH UH!',
+                    ':)',
+                    'Talvez exista a possibilidade de quem sabe possivelmente se Deus quiser provavelmente aconteça que por acaso possa ser que seja verdade...']
+            pesos = [5,5,5,5,5,5,5,5,5,5,5,2,2,0.5,1]
+                # variavel mensagem_escolhida é uma escolha aleatória tendo em mente as mensagens e o peso de cada
+                # k=1 define que queremos apenas um elemento aleatório, e [0] nos dá esse único elemento
+            mensagem_escolhida = random.choices(mensagens, weights=pesos, k=1)[0]
             await message.reply(mensagem_escolhida)
-            return
+            
+        # Se for uma mensagem apenas mencionando o bot:
+        elif len(message.content.split()) == 1:
+            olas = ['Oi', 'Ola', 'Chamou?', 'Fala']
+            pesos = [5,5,5,5]
+            ola_escolhida = random.choices(olas, weights = pesos, k=1)[0]
+            await message.reply(ola_escolhida)
+            
+        # Se não for uma mensagem apenas mencionando o bot:
+        else:
+            mensagens = ['Ta.',
+                'Se quiser sim mano',
+                'Acho que sim'
+                'Talvez mas...',
+                'Talvez',
+                'Pior que sim',
+                'Se tu diz...',
+                'Negativo',
+                'Verdade',
+                'Não, nd ver isso daí',
+                'É oq mano?',
+                'Papo reto',
+                'Nah id win',
+                'NUH UH!',
+                ':)',
+                'Talvez exista a possibilidade de quem sabe possivelmente se Deus quiser provavelmente aconteça que por acaso possa ser que seja verdade...']
+            pesos = [5,5,5,5,5,5,5,5,5,5,5,2,2,0.5,1]
+            # variavel mensagem_escolhida é uma escolha aleatória tendo em mente as mensagens e o peso de cada
+            # k=1 define que queremos apenas um elemento aleatório, e [0] nos dá esse único elemento
+            mensagem_escolhida = random.choices(mensagens, weights=pesos, k=1)[0]
+            await message.reply(mensagem_escolhida)
+            
         
         
+    respostas = {
+        'cazum9': '🤫 🧏‍♂️',
+        'dsbota': 'Esse não.',
+        'oi dsmota': 'e eu?',
+        'oi dsbot': 'ola :]'
+    }
     #No 'for' cria a variavel 'palavra' e 'resposta' para separar os itens na variavel 'respostas'
     for palavra, resposta in respostas.items():
         #Verifica se a mensagem tem uma das palavra-chave
@@ -384,6 +441,8 @@ async def on_message(message):
                 #emite a resposta, respondendo o usuário
                 await message.reply(resposta)
                 break
+
+             
             
     
     await bot.process_commands(message)
