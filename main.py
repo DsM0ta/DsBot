@@ -1,20 +1,27 @@
 from typing import List, Mapping
+from discord.ext import commands
+from discord import app_commands
 import discord
 import random
 import os
 import json
-from discord.ext import commands
 perms = discord.Intents.default()
 perms.message_content = True
 perms.members = True
 bot = commands.Bot(command_prefix = ";", intents=perms, help_command=None)
 
 
-#num = 0
-
 @bot.event
 async def on_ready():
     print("Tudo pronto.")
+    
+@bot.command()
+async def sinc(ctx:commands.Context):
+    if ctx.author.id == 273182673021829120:
+        sincs = await bot.tree.sync()
+        await ctx.reply(f"{len(sincs)} comando(s) sincronizados")
+    else:
+        await ctx.reply('O que está tentando fazer? apenas o Ds pode usar este comando!')
 
 #----------txt números------------
 #Ler txt com número do contador
@@ -75,6 +82,34 @@ def ler_censuraverso():
 def salvar_censuraverso(chat):
     with open('censuraverso.txt','w') as file:
         file.write(str(chat))
+        
+
+
+def respostas():
+    mensagens = ['Ta.',
+                 'Interessante',
+                'Se quiser sim mano', 
+                 'Talvez mas...', 
+                 'Pior que é',
+                 'Viajou mano',
+                 'Talvez',
+                 'Acho que sim',
+                 'Se tu diz...',
+                 'Negativo',
+                 'Verdade',
+                 'Não, nd ver isso daí',
+                 'É oq mano?',
+                 'Papo reto',
+                 'Nah id win',
+                 'NUH UH!',
+                 ':)',
+                 'Talvez exista a possibilidade de quem sabe possivelmente se Deus quiser provavelmente aconteça que por acaso possa ser que seja verdade...']
+    # variável peso dando a probabilidade de cada uma das frases do vetor
+    pesos = [5,5,5,5,5,5,5,5,5,5,5,5,5,5,2,2,0.5,1]
+    # variavel mensagem_escolhida é uma escolha aleatória tendo em mente as mensagens e o peso de cada
+    # k=1 define que queremos apenas um elemento aleatório, e [0] nos dá esse único elemento
+    mensagem_escolhida = random.choices(mensagens, weights=pesos, k=1)[0]
+    return mensagem_escolhida
 
 
 prox_n = ler_n()
@@ -83,7 +118,18 @@ canal_av = ler_cAviso()
 canal_cont = ler_c()
 salaSeg = ler_censuraverso()
 
+
+
+
+
+
 #===============================================
+
+
+
+
+
+
 
 @bot.command()
 async def help(ctx:commands.Context):
@@ -130,33 +176,33 @@ async def ola(ctx:commands.Context):
         await ctx.reply(f"{mensagem_escolhida + usuario.display_name}/{usuario.global_name}")
 
 
+#Slash command edition -- Ola --
+@bot.tree.command(description='Responde o usuario com um ola')
+async def ola(interact:discord.Interaction):
+    olas=['Oi, ',
+          'Ola, ',
+          'Opa, ']
+    pesos=[5,5,5]
+    mensagem_escolhida = random.choices(olas, weights = pesos, k=1)[0]
+    
+    if(interact.user.display_name == interact.user.global_name):
+        await interact.response.send_message(f'Ola, {interact.user.mention}')
+    else:
+        await interact.response.send_message(f'{mensagem_escolhida + interact.user.display_name}/{interact.user.global_name}')
+    
+    
+@bot.tree.command(description='Dê boas vindas de volta ao DsBot :D')
+async def welcomeback(interact:discord.Interaction):
+    await interact.response.send_message(f'Obrigado, {interact.user.mention}')
+    await interact.followup.send(f'É um prazer estar de volta :)')
+
+
 
 #--Respostas aleatórias--
 @bot.command()
 async def dsopinioes(ctx:commands.Context):
     # variável mensagens é um vetor com várias frases
-    mensagens = ['Ta.',
-                'Se quiser sim mano', 
-                 'Talvez mas...', 
-                 'Pior que é',
-                 'Viajou mano',
-                 'Talvez',
-                 'Acho que sim',
-                 'Se tu diz...',
-                 'Negativo',
-                 'Verdade',
-                 'Não, nd ver isso daí',
-                 'É oq mano?',
-                 'Papo reto',
-                 'Nah id win',
-                 'NUH UH!',
-                 ':)',
-                 'Talvez exista a possibilidade de quem sabe possivelmente se Deus quiser provavelmente aconteça que por acaso possa ser que seja verdade...']
-    # variável peso dando a probabilidade de cada uma das frases do vetor
-    pesos = [5,5,5,5,5,5,5,5,5,5,5,5,5,2,2,0.5,1]
-    # variavel mensagem_escolhida é uma escolha aleatória tendo em mente as mensagens e o peso de cada
-    # k=1 define que queremos apenas um elemento aleatório, e [0] nos dá esse único elemento
-    mensagem_escolhida = random.choices(mensagens, weights=pesos, k=1)[0]
+    mensagem_escolhida=respostas()
     # Se estiver respondendo uma mensagem
     if ctx.message.reference:
         # Vai pegar a mensagem respondida
@@ -228,6 +274,17 @@ async def falar(ctx:commands.Context, *, frase = None):
                 await ctx.send(frase)
     else:
         await ctx.reply("Preciso de algo para repetir. Tente: ```;falar <frase>```")
+
+
+@bot.tree.command()
+async def falar(interact: discord.Interaction, frase: str):
+    await interact.response.send_message(frase)
+    
+    salaSeg_mention = f'<#{salaSeg}>'
+    salaSeg_enviar = bot.get_channel(salaSeg)
+    print (f'Comando ";falar" utilizado pelo {interact.user.global_name}({interact.user.mention}) e enviado para {salaSeg_enviar}({salaSeg_mention})')
+    await salaSeg_enviar.send(f" {interact.user.mention} me utilizou para falar: ` {frase} `")
+    await interact.message.delete()
 
 
 
@@ -371,26 +428,7 @@ async def on_message(message):
         # Se marcar a mensagem do bot:
         if message.reference:
             referenced_message = await message.channel.fetch_message(message.reference.message_id)
-            mensagens = ['Ta.',
-                    'Se quiser sim mano',
-                    'Acho que sim'
-                    'Talvez mas...',
-                    'Talvez',
-                    'Pior que é',
-                    'Se tu diz...',
-                    'Negativo',
-                    'Verdade',
-                    'Não, nd ver isso daí',
-                    'É oq mano?',
-                    'Papo reto',
-                    'Nah id win',
-                    'NUH UH!',
-                    ':)',
-                    'Talvez exista a possibilidade de quem sabe possivelmente se Deus quiser provavelmente aconteça que por acaso possa ser que seja verdade...']
-            pesos = [5,5,5,5,5,5,5,5,5,5,5,2,2,0.5,1]
-                # variavel mensagem_escolhida é uma escolha aleatória tendo em mente as mensagens e o peso de cada
-                # k=1 define que queremos apenas um elemento aleatório, e [0] nos dá esse único elemento
-            mensagem_escolhida = random.choices(mensagens, weights=pesos, k=1)[0]
+            mensagem_escolhida=respostas()
             await message.reply(mensagem_escolhida)
             
         # Se for uma mensagem apenas mencionando o bot:
@@ -402,38 +440,20 @@ async def on_message(message):
             
         # Se não for uma mensagem apenas mencionando o bot:
         else:
-            mensagens = ['Ta.',
-                'Se quiser sim mano',
-                'Acho que sim'
-                'Talvez mas...',
-                'Talvez',
-                'Pior que sim',
-                'Se tu diz...',
-                'Negativo',
-                'Verdade',
-                'Não, nd ver isso daí',
-                'É oq mano?',
-                'Papo reto',
-                'Nah id win',
-                'NUH UH!',
-                ':)',
-                'Talvez exista a possibilidade de quem sabe possivelmente se Deus quiser provavelmente aconteça que por acaso possa ser que seja verdade...']
-            pesos = [5,5,5,5,5,5,5,5,5,5,5,2,2,0.5,1]
-            # variavel mensagem_escolhida é uma escolha aleatória tendo em mente as mensagens e o peso de cada
-            # k=1 define que queremos apenas um elemento aleatório, e [0] nos dá esse único elemento
-            mensagem_escolhida = random.choices(mensagens, weights=pesos, k=1)[0]
+            respostas()
+            mensagem_escolhida=respostas()
             await message.reply(mensagem_escolhida)
             
         
-        
-    respostas = {
+    
+    respostas_secret = {
         'cazum9': '🤫 🧏‍♂️',
         'dsbota': 'Esse não.',
         'oi dsmota': 'e eu?',
         'oi dsbot': 'ola :]'
     }
     #No 'for' cria a variavel 'palavra' e 'resposta' para separar os itens na variavel 'respostas'
-    for palavra, resposta in respostas.items():
+    for palavra, resposta in respostas_secret.items():
         #Verifica se a mensagem tem uma das palavra-chave
         if palavra in message.content.lower():
             chance = random.random()
@@ -449,6 +469,8 @@ async def on_message(message):
 
 
 
+
+# pegando chave no arquivo key.json
 with open('key.json') as key_file:
     key = json.load(key_file)
 token = key['token']
