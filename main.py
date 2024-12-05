@@ -10,10 +10,16 @@ perms.message_content = True
 perms.members = True
 bot = commands.Bot(command_prefix = ";", intents=perms, help_command=None)
 
+#importando cogs
+async def load_cogs():
+    for arquivo in os.listdir('cogs'):
+        if arquivo.endswith('.py'):
+            await bot.load_extension(f'cogs.{arquivo[:-3]}')
 
 @bot.event
 async def on_ready():
     print("Tudo pronto.")
+    await load_cogs()
     
 @bot.command()
 async def sinc(ctx:commands.Context):
@@ -136,59 +142,61 @@ async def help(ctx:commands.Context):
     helpMessage = """
     Não sabe os comandos? relaxa, pelo o que eu me lembro tem esses daqui:
 
+    Prefixo: ;
+
     **COMANDOS PÚBLICOS:**
-    `;help` - Mostra esta mensagem de ajuda
-    `;ola` - Dê um oi pro DsBot
-    `;dsopinioes` - DsBot da sua sincera opinião
-    `;falar <mensagem>` - Manda DsBot falar algo
+    `help` - Mostra esta mensagem de ajuda
+    `ola` - Dê um oi pro DsBot
+    `dsopinioes` - DsBot da sua sincera opinião
+    `falar <mensagem>` - Manda DsBot falar algo
     
     **COMANDOS PRO DS (e a administração):**
-    `;chataviso <chat>` - Define um chat para enviar avisos secretos ao público (não utilizar no pudimverso) :shushing_face: 
-    `;chatcontar <chat>` - Define um chat para ser o incrível chat de contagem
-    `;naocontar` - Desafaz o chat de contagem
-    `;proxn <numero>` - Define o próximo número da contagem
-    `;censuraversoC <chat>` - Define o chat para a sala de segurança :shushing_face: 
+    `chataviso <chat>` - Define um chat para enviar avisos secretos ao público (não utilizar no pudimverso) :shushing_face: 
+    `chatcontar <chat>` - Define um chat para ser o incrível chat de contagem
+    `naocontar` - Desafaz o chat de contagem
+    `proxn <numero>` - Define o próximo número da contagem
+    `censuraversoC <chat>` - Define o chat para a sala de segurança :shushing_face: 
     """
 
     await ctx.send(helpMessage)
 
 # --- ola ---
-#Indica que é um COMANDO do bot
-@bot.command()
-#comando assíncrono definido como "ola". ctx definido como contexto
-async def ola(ctx:commands.Context):
-    #variavel usuario com contexto pega autor da mensagem
-    usuario = ctx.author
-    #manda mensagem de oi e chama pelo nome exibido do usuario que usou o comando (através do contexto)
-    olas = ['Oi, ',
-            'Ola, ',
-            'Opa, ']
-    # variável peso dando a probabilidade de cada uma das frases do vetor
-    pesos = [5,5,5]
+# #Indica que é um COMANDO do bot
+# @bot.command()
+# #comando assíncrono definido como "ola". ctx definido como contexto
+# async def ola(ctx:commands.Context):
+#     #variavel usuario com contexto pega autor da mensagem
+#     usuario = ctx.author
+#     #manda mensagem de oi e chama pelo nome exibido do usuario que usou o comando (através do contexto)
+#     olas = ['Oi, ',
+#             'Ola, ',
+#             'Opa, ']
+#     # variável peso dando a probabilidade de cada uma das frases do vetor
+#     pesos = [5,5,5]
     
-    mensagem_escolhida = random.choices(olas, weights = pesos, k=1)[0]
+#     mensagem_escolhida = random.choices(olas, weights = pesos, k=1)[0]
 
-    #com o contexto envia uma mensagem. envia a mensagem escolhida + o usuário
+#     #com o contexto envia uma mensagem. envia a mensagem escolhida + o usuário
     
-    if (usuario.display_name == usuario.global_name):
-        await ctx.reply(f"{mensagem_escolhida + usuario.display_name}")
-    else:
-        await ctx.reply(f"{mensagem_escolhida + usuario.display_name}/{usuario.global_name}")
+#     if (usuario.display_name == usuario.global_name):
+#         await ctx.reply(f"{mensagem_escolhida + usuario.display_name}")
+#     else:
+#         await ctx.reply(f"{mensagem_escolhida + usuario.display_name}/{usuario.global_name}")
 
 
 #Slash command edition -- Ola --
-@bot.tree.command(description='Responde o usuario com um ola')
-async def ola(interact:discord.Interaction):
-    olas=['Oi, ',
-          'Ola, ',
-          'Opa, ']
-    pesos=[5,5,5]
-    mensagem_escolhida = random.choices(olas, weights = pesos, k=1)[0]
+# @bot.tree.command(description='Responde o usuario com um ola')
+# async def ola(interact:discord.Interaction):
+#     olas=['Oi, ',
+#           'Ola, ',
+#           'Opa, ']
+#     pesos=[5,5,5]
+#     mensagem_escolhida = random.choices(olas, weights = pesos, k=1)[0]
     
-    if(interact.user.display_name == interact.user.global_name):
-        await interact.response.send_message(f'Ola, {interact.user.mention}')
-    else:
-        await interact.response.send_message(f'{mensagem_escolhida + interact.user.display_name}/{interact.user.global_name}')
+#     if(interact.user.display_name == interact.user.global_name):
+#         await interact.response.send_message(f'Ola, {interact.user.mention}')
+#     else:
+#         await interact.response.send_message(f'{mensagem_escolhida + interact.user.display_name}/{interact.user.global_name}')
     
     
 @bot.tree.command(description='Dê boas vindas de volta ao DsBot :D')
