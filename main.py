@@ -11,15 +11,17 @@ perms.members = True
 bot = commands.Bot(command_prefix = ";", intents=perms, help_command=None)
 
 #importando cogs
-async def load_cogs():
+async def carregar_cogs():
     for arquivo in os.listdir('cogs'):
         if arquivo.endswith('.py'):
             await bot.load_extension(f'cogs.{arquivo[:-3]}')
 
+
 @bot.event
 async def on_ready():
+    await carregar_cogs()
     print("Tudo pronto.")
-    await load_cogs()
+    
     
 @bot.command()
 async def sinc(ctx:commands.Context):
@@ -90,7 +92,7 @@ def salvar_censuraverso(chat):
         file.write(str(chat))
         
 
-
+#função com as respostas aleátórias
 def respostas():
     mensagens = ['Ta.',
                  'Interessante',
@@ -118,6 +120,7 @@ def respostas():
     return mensagem_escolhida
 
 
+#variáveis
 prox_n = ler_n()
 print(prox_n)
 canal_av = ler_cAviso()
@@ -160,69 +163,12 @@ async def help(ctx:commands.Context):
 
     await ctx.send(helpMessage)
 
-# --- ola ---
-# #Indica que é um COMANDO do bot
-# @bot.command()
-# #comando assíncrono definido como "ola". ctx definido como contexto
-# async def ola(ctx:commands.Context):
-#     #variavel usuario com contexto pega autor da mensagem
-#     usuario = ctx.author
-#     #manda mensagem de oi e chama pelo nome exibido do usuario que usou o comando (através do contexto)
-#     olas = ['Oi, ',
-#             'Ola, ',
-#             'Opa, ']
-#     # variável peso dando a probabilidade de cada uma das frases do vetor
-#     pesos = [5,5,5]
-    
-#     mensagem_escolhida = random.choices(olas, weights = pesos, k=1)[0]
-
-#     #com o contexto envia uma mensagem. envia a mensagem escolhida + o usuário
-    
-#     if (usuario.display_name == usuario.global_name):
-#         await ctx.reply(f"{mensagem_escolhida + usuario.display_name}")
-#     else:
-#         await ctx.reply(f"{mensagem_escolhida + usuario.display_name}/{usuario.global_name}")
-
-
-#Slash command edition -- Ola --
-# @bot.tree.command(description='Responde o usuario com um ola')
-# async def ola(interact:discord.Interaction):
-#     olas=['Oi, ',
-#           'Ola, ',
-#           'Opa, ']
-#     pesos=[5,5,5]
-#     mensagem_escolhida = random.choices(olas, weights = pesos, k=1)[0]
-    
-#     if(interact.user.display_name == interact.user.global_name):
-#         await interact.response.send_message(f'Ola, {interact.user.mention}')
-#     else:
-#         await interact.response.send_message(f'{mensagem_escolhida + interact.user.display_name}/{interact.user.global_name}')
-    
     
 @bot.tree.command(description='Dê boas vindas de volta ao DsBot :D')
 async def welcomeback(interact:discord.Interaction):
     await interact.response.send_message(f'Obrigado, {interact.user.mention}')
     await interact.followup.send(f'É um prazer estar de volta :)')
 
-
-
-#--Respostas aleatórias--
-@bot.command()
-async def dsopinioes(ctx:commands.Context):
-    # variável mensagens é um vetor com várias frases
-    mensagem_escolhida=respostas()
-    # Se estiver respondendo uma mensagem
-    if ctx.message.reference:
-        # Vai pegar a mensagem respondida
-        referenced_message = await ctx.channel.fetch_message(ctx.message.reference.message_id)
-        # Envia a mensagem para a mensagem respondida
-        await referenced_message.reply(mensagem_escolhida)
-        # Deleta a mensagem enviando o comando
-        await ctx.message.delete();
-    else:
-        await ctx.send(mensagem_escolhida)
-        await ctx.message.delete();
-    
 
 
 #-------- Sala de segurança 
@@ -284,7 +230,7 @@ async def falar(ctx:commands.Context, *, frase = None):
         await ctx.reply("Preciso de algo para repetir. Tente: ```;falar <frase>```")
 
 
-@bot.tree.command()
+@bot.tree.command(description='Peça para Dszin falar algo específico')
 async def falar(interact: discord.Interaction, frase: str):
     await interact.response.send_message(frase)
     
@@ -477,6 +423,8 @@ async def on_message(message):
 
 
 
+async def main():
+    await carregar_cogs()
 
 # pegando chave no arquivo key.json
 with open('key.json') as key_file:
