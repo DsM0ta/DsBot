@@ -27,7 +27,7 @@ class Ola(commands.Cog):
 
     #slash command
     @app_commands.command(description='Responde o usuario com um ola')
-    async def ola(self, interact:discord.Interaction):
+    async def ola_(self, interact:discord.Interaction):
         olas=['Oi, ',
               'Ola, ']
         pesos=[5,5]

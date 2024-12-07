@@ -232,13 +232,14 @@ async def falar(ctx:commands.Context, *, frase = None):
 
 @bot.tree.command(description='Peça para Dszin falar algo específico')
 async def falar(interact: discord.Interaction, frase: str):
-    await interact.response.send_message(frase)
+    await interact.response.defer()  # Oculta a interação para não mostrar que você usou o comando
+    await interact.channel.send(frase)  # Envia a mensagem para o canal
+    await interact.delete_original_response()  # Remove a resposta inicial do "carregando"
     
     salaSeg_mention = f'<#{salaSeg}>'
     salaSeg_enviar = bot.get_channel(salaSeg)
     print (f'Comando ";falar" utilizado pelo {interact.user.global_name}({interact.user.mention}) e enviado para {salaSeg_enviar}({salaSeg_mention})')
     await salaSeg_enviar.send(f" {interact.user.mention} me utilizou para falar: ` {frase} `")
-    await interact.message.delete()
 
 
 

@@ -9,7 +9,7 @@ class DsOpinioes(commands.Cog):
         super().__init__()
 
     @commands.command()
-    async def dsopinioes(self, ctx: commands.Context):
+    async def dsopinioes(self, ctx):
         mensagem_escolhida = Respostas.respostas()  # Chama o método estático
         if ctx.message.reference:
             referenced_message = await ctx.channel.fetch_message(ctx.message.reference.message_id)
@@ -21,7 +21,7 @@ class DsOpinioes(commands.Cog):
 
 
     @app_commands.command(description="Peça a opinião de Dszin sobre algo.")
-    async def dsopinioes(self, interact: discord.Interaction, message_id: str = None):
+    async def dsopinioes_(self, interact: discord.Interaction, message_id: str = None):
         mensagem_escolhida = Respostas.respostas()  # Chama o método estático
         if message_id:
             try:
