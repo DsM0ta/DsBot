@@ -78,18 +78,18 @@ def salvar_cAviso(chat):
     
 
 #----------txt chat censuraverso---------
-#Ler txt do chat
-def ler_censuraverso():
-    try:
-        with open('censuraverso.txt', 'r') as file:
-            return int(file.read())
-    except FileNotFoundError:
-        return
+# #Ler txt do chat
+# def ler_censuraverso():
+#     try:
+#         with open('censuraverso.txt', 'r') as file:
+#             return int(file.read())
+#     except FileNotFoundError:
+#         return
     
-#Salvar id do chat
-def salvar_censuraverso(chat):
-    with open('censuraverso.txt','w') as file:
-        file.write(str(chat))
+# #Salvar id do chat
+# def salvar_censuraverso(chat):
+#     with open('censuraverso.txt','w') as file:
+#         file.write(str(chat))
         
 
 #função com as respostas aleátórias
@@ -125,7 +125,7 @@ prox_n = ler_n()
 print(prox_n)
 canal_av = ler_cAviso()
 canal_cont = ler_c()
-salaSeg = ler_censuraverso()
+# salaSeg = ler_censuraverso()
 
 
 
@@ -138,32 +138,6 @@ salaSeg = ler_censuraverso()
 
 
 
-
-
-@bot.command()
-async def help(ctx:commands.Context):
-    helpMessage = """
-    Não sabe os comandos? relaxa, pelo o que eu me lembro tem esses daqui:
-
-    Prefixo: ;
-
-    **COMANDOS PÚBLICOS:**
-    `help` - Mostra esta mensagem de ajuda
-    `ola` - Dê um oi pro DsBot
-    `dsopinioes` - DsBot da sua sincera opinião
-    `falar <mensagem>` - Manda DsBot falar algo
-    
-    **COMANDOS PRO DS (e a administração):**
-    `chataviso <chat>` - Define um chat para enviar avisos secretos ao público (não utilizar no pudimverso) :shushing_face: 
-    `chatcontar <chat>` - Define um chat para ser o incrível chat de contagem
-    `naocontar` - Desafaz o chat de contagem
-    `proxn <numero>` - Define o próximo número da contagem
-    `censuraversoC <chat>` - Define o chat para a sala de segurança :shushing_face: 
-    """
-
-    await ctx.send(helpMessage)
-
-    
 @bot.tree.command(description='Dê boas vindas de volta ao DsBot :D')
 async def welcomeback(interact:discord.Interaction):
     await interact.response.send_message(f'Obrigado, {interact.user.mention}')
@@ -171,75 +145,75 @@ async def welcomeback(interact:discord.Interaction):
 
 
 
-#-------- Sala de segurança 
-@bot.command()
-async def censuraversoC(ctx=commands.context, chat:discord.TextChannel = None):
-    if ctx.author.guild_permissions.manage_messages or ctx.message.author.id == 273182673021829120:
-        global censuraversoChat
-        if chat:
-            _censuraversoChat = discord.utils.get(ctx.guild.channels, id=chat.id)
-            if _censuraversoChat:
-                censuraversoChat = _censuraversoChat.id
-                salvar_censuraverso(censuraversoChat)
-                await ctx.send(f"Chat escolhido como sala de segurança: {_censuraversoChat.mention}.")
+# #-------- Sala de segurança 
+# @bot.command()
+# async def censuraversoC(ctx=commands.context, chat:discord.TextChannel = None):
+#     if ctx.author.guild_permissions.manage_messages or ctx.message.author.id == 273182673021829120:
+#         global censuraversoChat
+#         if chat:
+#             _censuraversoChat = discord.utils.get(ctx.guild.channels, id=chat.id)
+#             if _censuraversoChat:
+#                 censuraversoChat = _censuraversoChat.id
+#                 salvar_censuraverso(censuraversoChat)
+#                 await ctx.send(f"Chat escolhido como sala de segurança: {_censuraversoChat.mention}.")
 
-            else: 
-                await ctx.send(f"Não foi possível encontrar o chat '{_censuraversoChat}'.")
-        else:
-            await ctx.reply("Comando incompleto! Tente: ```;censuraversoC <canal>```")
-    else:
-        await ctx.send("Pare agora mesmo! você não tem permissão para usar este comando!")
+#             else: 
+#                 await ctx.send(f"Não foi possível encontrar o chat '{_censuraversoChat}'.")
+#         else:
+#             await ctx.reply("Comando incompleto! Tente: ```;censuraversoC <canal>```")
+#     else:
+#         await ctx.send("Pare agora mesmo! você não tem permissão para usar este comando!")
 
-@censuraversoC.error
-async def censuraversoC_error(ctx, error):
-    if isinstance(error, commands.BadArgument):
-        await ctx.send("Por favor, mencione um canal válido.")
+# @censuraversoC.error
+# async def censuraversoC_error(ctx, error):
+#     if isinstance(error, commands.BadArgument):
+#         await ctx.send("Por favor, mencione um canal válido.")
 
 
-# ------ falar -------
-@bot.command()
-# Comando assíncrono definido como "falar", com o parâmetro de contexto (ctx)
-# "*, frase" quer dizer que após o comando ele espera uma frase aceitando espaços e várias palavras
-async def falar(ctx:commands.Context, *, frase = None):
-    # Se a frase não estiver vazia
-    if (frase != None):
-        usuario = ctx.author
+# # ------ falar -------
+# @bot.command()
+# # Comando assíncrono definido como "falar", com o parâmetro de contexto (ctx)
+# # "*, frase" quer dizer que após o comando ele espera uma frase aceitando espaços e várias palavras
+# async def falar(ctx:commands.Context, *, frase = None):
+#     # Se a frase não estiver vazia
+#     if (frase != None):
+#         usuario = ctx.author
 
-        #--Enviando mensagem para sala de segurança--
-        salaSeg_mention = f'<#{salaSeg}>'
-        salaSeg_enviar = bot.get_channel(salaSeg)
-        print (f'Comando ";falar" utilizado pelo {usuario.global_name}({usuario.mention}) e enviado para {salaSeg_enviar}({salaSeg_mention})')
-        # await salaSeg_enviar.send(f" {usuario.mention} me utilizou para falar: ` {ctx.message.content} `")
-        await salaSeg_enviar.send(f" {usuario.mention} me utilizou para falar: ` {frase} `")
-        #await salaSeg_enviar.send(ctx.author.avatar)
+#         #--Enviando mensagem para sala de segurança--
+#         salaSeg_mention = f'<#{salaSeg}>'
+#         salaSeg_enviar = bot.get_channel(salaSeg)
+#         print (f'Comando ";falar" utilizado pelo {usuario.global_name}({usuario.mention}) e enviado para {salaSeg_enviar}({salaSeg_mention})')
+#         # await salaSeg_enviar.send(f" {usuario.mention} me utilizou para falar: ` {ctx.message.content} `")
+#         await salaSeg_enviar.send(f" {usuario.mention} me utilizou para falar: ` {frase} `")
+#         #await salaSeg_enviar.send(ctx.author.avatar)
 
         
-        # Tendo o contexto, ele deleta a mensagem original da pessoa
-        await ctx.message.delete()
-        # censurar palavras ruins
-        censuraWords = ["nigga", "nigger", "mama minha", "mama a", "9/11", "11/9", "onlyfans", "chupa meu", "chupa minha", "p3d0", "ped0", "pedo", "pedofilia","pedofilo","pedofelo","rule34","r34","rule34.xxx","xvideos", "x videos", "pornhub", "x video", "xvideo", "dalva","porno", "porn"]
-        if any(word in frase.lower() for word in censuraWords):
-            await ctx.send(f'{usuario.mention}, me desculpe, tem algo nessa frase que sou proibido de dizer.')            
-        else:
-            if ctx.message.reference:
-                referenced_message = await ctx.channel.fetch_message(ctx.message.reference.message_id)
-                await referenced_message.reply(frase)
-            else:
-                await ctx.send(frase)
-    else:
-        await ctx.reply("Preciso de algo para repetir. Tente: ```;falar <frase>```")
+#         # Tendo o contexto, ele deleta a mensagem original da pessoa
+#         await ctx.message.delete()
+#         # censurar palavras ruins
+#         censuraWords = ["nigga", "nigger", "mama minha", "mama a", "9/11", "11/9", "onlyfans", "chupa meu", "chupa minha", "p3d0", "ped0", "pedo", "pedofilia","pedofilo","pedofelo","rule34","r34","rule34.xxx","xvideos", "x videos", "pornhub", "x video", "xvideo", "dalva","porno", "porn"]
+#         if any(word in frase.lower() for word in censuraWords):
+#             await ctx.send(f'{usuario.mention}, me desculpe, tem algo nessa frase que sou proibido de dizer.')            
+#         else:
+#             if ctx.message.reference:
+#                 referenced_message = await ctx.channel.fetch_message(ctx.message.reference.message_id)
+#                 await referenced_message.reply(frase)
+#             else:
+#                 await ctx.send(frase)
+#     else:
+#         await ctx.reply("Preciso de algo para repetir. Tente: ```;falar <frase>```")
 
 
-@bot.tree.command(description='Peça para Dszin falar algo específico')
-async def falar(interact: discord.Interaction, frase: str):
-    await interact.response.defer()  # Oculta a interação para não mostrar que você usou o comando
-    await interact.channel.send(frase)  # Envia a mensagem para o canal
-    await interact.delete_original_response()  # Remove a resposta inicial do "carregando"
+# @bot.tree.command(description='Peça para Dszin falar algo específico')
+# async def falar(interact: discord.Interaction, frase: str):
+#     await interact.response.defer()  # Oculta a interação para não mostrar que você usou o comando
+#     await interact.channel.send(frase)  # Envia a mensagem para o canal
+#     await interact.delete_original_response()  # Remove a resposta inicial do "carregando"
     
-    salaSeg_mention = f'<#{salaSeg}>'
-    salaSeg_enviar = bot.get_channel(salaSeg)
-    print (f'Comando ";falar" utilizado pelo {interact.user.global_name}({interact.user.mention}) e enviado para {salaSeg_enviar}({salaSeg_mention})')
-    await salaSeg_enviar.send(f" {interact.user.mention} me utilizou para falar: ` {frase} `")
+#     salaSeg_mention = f'<#{salaSeg}>'
+#     salaSeg_enviar = bot.get_channel(salaSeg)
+#     print (f'Comando ";falar" utilizado pelo {interact.user.global_name}({interact.user.mention}) e enviado para {salaSeg_enviar}({salaSeg_mention})')
+#     await salaSeg_enviar.send(f" {interact.user.mention} me utilizou para falar: ` {frase} `")
 
 
 
@@ -373,6 +347,34 @@ async def on_message(message):
             await message.delete()
             canal_cont = canal_cont
             return
+        
+
+    #---- CENSURAVERSO ----
+    channel_id = 1236740302375485530
+
+    if message.channel.id == channel_id:
+        if "https://" in message.content:
+            return
+        if any(attachment.filename.lower().endswith('.gif') for attachment in message.attachments):
+            return
+    
+        # Ignora mensagens com links de GIFs do Discord
+        if 'cdn.discordapp.com' in message.content and message.content.lower().endswith('.gif'):
+            return
+        
+        censuraNum = ["5 8","581", "582", "580", "583", "584", "585", "quinhentos", "kinhentos", "quinhento", "quinentos", "quinento", "kinhento", "qinhentos"]
+        if any(char in message.content for char in censuraNum):
+            await message.delete()
+
+            image_folder = r'D:\DISCO D\dsrm gamer jogos\Imagens\meme e emotes'
+            if os.path.exists(image_folder):
+                images = [file for file in os.listdir(image_folder) if file.endswith('.png') or file.endswith('.jpg')]
+                if images:
+                    random_image = random.choice(images)
+                    image_path = os.path.join(image_folder, random_image)
+                    await message.channel.send(file=discord.File(image_path))
+                else:
+                    return
 
 
     #---- Resposta automática ----
