@@ -114,7 +114,7 @@ def respostas():
                  'Talvez exista a possibilidade de quem sabe possivelmente se Deus quiser provavelmente aconteça que por acaso possa ser que seja verdade...']
     # variável peso dando a probabilidade de cada uma das frases do vetor
     pesos = [5,5,5,5,5,5,5,5,5,5,5,5,5,5,2,2,0.5,1]
-    # variavel mensagem_escolhida é uma escolha aleatória tendo em mente as mensagens e o peso de cada
+    # variavel  é uma escolha aleatória tendo em mente as mensagens e o peso de cada
     # k=1 define que queremos apenas um elemento aleatório, e [0] nos dá esse único elemento
     mensagem_escolhida = random.choices(mensagens, weights=pesos, k=1)[0]
     return mensagem_escolhida
@@ -248,6 +248,7 @@ async def censuraversoC_error(ctx, error):
 # --- Definir chat de CONTAR ---
 @bot.command()
 async def chatcontar(ctx, canal_nome: discord.TextChannel = None):
+    
     if ctx.author.guild_permissions.administrator or ctx.message.author.id == 273182673021829120:
         if canal_nome:
             global canal_cont
@@ -362,24 +363,23 @@ async def on_message(message):
         if 'cdn.discordapp.com' in message.content and message.content.lower().endswith('.gif'):
             return
         
-        censuraNum = ["5 8","581", "582", "580", "583", "584", "585", "quinhentos", "kinhentos", "quinhento", "quinentos", "quinento", "kinhento", "qinhentos"]
+        censuraNum = ["5 8","581", "582", "580", "583", "584", "585","586","587","588","589","590","58", "quinhentos", "kinhentos", "quinhento", "quinentos", "quinento", "kinhento", "qinhentos"]
         if any(char in message.content for char in censuraNum):
             await message.delete()
+            print("Número enviado no slowmode:",message.content)
 
-            image_folder = r'D:\DISCO D\dsrm gamer jogos\Imagens\meme e emotes'
-            if os.path.exists(image_folder):
-                images = [file for file in os.listdir(image_folder) if file.endswith('.png') or file.endswith('.jpg')]
-                if images:
-                    random_image = random.choice(images)
-                    image_path = os.path.join(image_folder, random_image)
-                    await message.channel.send(file=discord.File(image_path))
-                else:
-                    return
+            # image_folder = r'D:\DISCO D\dsrm gamer jogos\Imagens\meme e emotes'
+            # if os.path.exists(image_folder):
+            #     images = [file for file in os.listdir(image_folder) if file.endswith('.png') or file.endswith('.jpg')]
+            #     if images:
+            #         random_image = random.choice(images)
+            #         image_path = os.path.join(image_folder, random_image)
+            #         await message.channel.send(file=discord.File(image_path))
+            #     else:
+            #         return
 
 
     #---- Resposta automática ----
-    
-
     #Verifica se o bot foi mencionado
     if bot.user.mentioned_in(message):
         # Se marcar a mensagem do bot:
