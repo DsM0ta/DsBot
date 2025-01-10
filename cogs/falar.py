@@ -1,7 +1,7 @@
 import discord
 from discord import app_commands
 from discord.ext import commands
-from cogs.funcoes import salaSeg
+from cogs.variaveis import salaSeg
 
 
 class Falar(commands.Cog):

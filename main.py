@@ -5,6 +5,7 @@ import discord
 import random
 import os
 import json
+import asyncio
 perms = discord.Intents.default()
 perms.message_content = True
 perms.members = True
@@ -14,14 +15,18 @@ bot = commands.Bot(command_prefix = ";", intents=perms, help_command=None)
 async def carregar_cogs():
     for arquivo in os.listdir('cogs'):
         if arquivo.endswith('.py'):
-            await bot.load_extension(f'cogs.{arquivo[:-3]}')
+            try:
+                await bot.load_extension(f"cogs.{arquivo[:-3]}")
+            except Exception as e:
+                print(f"Erro ao carregar {arquivo}: {e}")
 
 
 @bot.event
 async def on_ready():
     await carregar_cogs()
     print("Tudo pronto.")
-    
+
+
     
 @bot.command()
 async def sinc(ctx:commands.Context):
@@ -120,9 +125,9 @@ def respostas():
     return mensagem_escolhida
 
 
-#variáveis
+# variáveis
 prox_n = ler_n()
-print(prox_n)
+# print(prox_n)
 canal_av = ler_cAviso()
 canal_cont = ler_c()
 # salaSeg = ler_censuraverso()
@@ -245,53 +250,53 @@ async def censuraversoC_error(ctx, error):
 
 
 
-# --- Definir chat de CONTAR ---
-@bot.command()
-async def chatcontar(ctx, canal_nome: discord.TextChannel = None):
+# # --- Definir chat de CONTAR ---
+# @bot.command()
+# async def chatcontar(ctx, canal_nome: discord.TextChannel = None):
     
-    if ctx.author.guild_permissions.administrator or ctx.message.author.id == 273182673021829120:
-        if canal_nome:
-            global canal_cont
-            canal_c = discord.utils.get(ctx.guild.channels, id=canal_nome.id)
-            if canal_c:
-                canal_cont = canal_c.id
-                salvar_c(canal_cont)
-                await ctx.send(f"Canal escolhido para contar: {canal_c.mention}.")
-            else:
-                await ctx.send(f"Não foi possível encontrar o canal '{canal_nome}'.")
-        else:
-            await ctx.reply("Comando incompleto! Tente: ```;chatcontar <canal>```")
-    else:
-        await ctx.send("Pare agora mesmo! você não tem permissão para usar este comando!")
+#     if ctx.author.guild_permissions.administrator or ctx.message.author.id == 273182673021829120:
+#         if canal_nome:
+#             global canal_cont
+#             canal_c = discord.utils.get(ctx.guild.channels, id=canal_nome.id)
+#             if canal_c:
+#                 canal_cont = canal_c.id
+#                 salvar_c(canal_cont)
+#                 await ctx.send(f"Canal escolhido para contar: {canal_c.mention}.")
+#             else:
+#                 await ctx.send(f"Não foi possível encontrar o canal '{canal_nome}'.")
+#         else:
+#             await ctx.reply("Comando incompleto! Tente: ```;chatcontar <canal>```")
+#     else:
+#         await ctx.send("Pare agora mesmo! você não tem permissão para usar este comando!")
 
-@chatcontar.error
-async def censuraversoC_error(ctx, error):
-    if isinstance(error, commands.BadArgument):
-        await ctx.send("Por favor, mencione um chat válido.")
+# @chatcontar.error
+# async def censuraversoC_error(ctx, error):
+#     if isinstance(error, commands.BadArgument):
+#         await ctx.send("Por favor, mencione um chat válido.")
 
 
-#--- Resetar canal de contar
-@bot.command()
-async def naocontar(ctx):
-    if ctx.author.guild_permissions.administrator or ctx.message.author.id == 273182673021829120:
+# #--- Resetar canal de contar
+# @bot.command()
+# async def naocontar(ctx):
+#     if ctx.author.guild_permissions.administrator or ctx.message.author.id == 273182673021829120:
         
-        global canal_cont
-        canal_cont = 0
-        salvar_c(canal_cont)
-        #print(canal_cont)
-        
-        await ctx.send("Chat de contar desfeito :(")
-    else:
-        await ctx.send("Pare agora mesmo! você não tem permissão para usar este comando!")
+#         global canal_cont
+#         canal_cont = 0
+#         salvar_c(canal_cont)
+#         #print(canal_cont)
 
-#--- Redefinir número
-@bot.command()
-async def proxn(ctx, nextn = prox_n):
-    if ctx.author.guild_permissions.administrator or ctx.message.author.id == 273182673021829120:
-        global prox_n
-        await ctx.send(f"Próximo número definido para: {nextn}.")
-        prox_n = nextn
-        salvar_n(prox_n)
+#         await ctx.send("Chat de contar desfeito :(")
+#     else:
+#         await ctx.send("Pare agora mesmo! você não tem permissão para usar este comando!")
+
+# #--- Redefinir número
+# @bot.command()
+# async def proxn(ctx, nextn = prox_n):
+#     if ctx.author.guild_permissions.administrator or ctx.message.author.id == 273182673021829120:
+#         global prox_n
+#         await ctx.send(f"Próximo número definido para: {nextn}.")
+#         prox_n = nextn
+#         salvar_n(prox_n)
 
 
 
@@ -363,7 +368,7 @@ async def on_message(message):
         if 'cdn.discordapp.com' in message.content and message.content.lower().endswith('.gif'):
             return
         
-        censuraNum = ["5 8","581", "582", "580", "583", "584", "585","586","587","588","589","590","58", "quinhentos", "kinhentos", "quinhento", "quinentos", "quinento", "kinhento", "qinhentos"]
+        censuraNum = ["581", "582", "580", "583", "584", "585","586","587","588","589","590","58","5", "quinhentos", "kinhentos", "quinhento", "quinentos", "quinento", "kinhento", "qinhentos"]
         if any(char in message.content for char in censuraNum):
             await message.delete()
             print("Número enviado no slowmode:",message.content)

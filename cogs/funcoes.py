@@ -10,7 +10,7 @@ class Respostas(commands.Cog):
     @staticmethod
     def respostas():
         mensagens = [
-            'Ta.','É','Sim','Não', 'Interessante', 'Se quiser sim mano', 
+            'Ta.','É muito é massa','É','Sim','Não', 'Interessante', 'Se quiser sim mano', 
             'Talvez mas...', 'Pior que é', 'Viajou mano', 
             'Talvez', 'Acho que sim', 'Se tu diz...', 
             'Negativo', 'Verdade', 'Não, nd ver isso daí', 
@@ -22,22 +22,6 @@ class Respostas(commands.Cog):
         mensagem_escolhida = random.choices(mensagens, weights=pesos, k=1)[0]
         return mensagem_escolhida
     
-
-#Ler txt do chat
-def ler_censuraverso():
-    try:
-        with open('censuraverso.txt', 'r') as file:
-            return int(file.read())
-    except FileNotFoundError:
-        return
-        
-#Salvar id do chat
-def salvar_censuraverso(chat):
-    with open('censuraverso.txt','w') as file:
-        file.write(str(chat))
-
-salaSeg = ler_censuraverso()
-
 
 async def setup(bot):
     await bot.add_cog(Respostas(bot))

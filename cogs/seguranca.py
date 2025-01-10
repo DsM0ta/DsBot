@@ -1,6 +1,6 @@
 import discord
 from discord.ext import commands
-from cogs.funcoes import salvar_censuraverso
+from cogs.variaveis import salvar_censuraverso
 
 class Seguranca(commands.Cog):
     def __init__(self, bot):
