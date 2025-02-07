@@ -35,7 +35,7 @@ class Falar(commands.Cog):
                 "nigga", "nigger", "mama minha", "mama a", "9/11", "11/9", "onlyfans",
                 "chupa meu", "chupa minha", "p3d0", "ped0", "pedo", "pedofilia", "pedofilo",
                 "pedofelo", "rule34", "r34", "rule34.xxx", "xvideos", "x videos", "pornhub",
-                "x video", "xvideo", "dalva", "porno", "porn"
+                "x video", "xvideo", "dalva", "porno", "porn", " puta", "caralho", "arrombado", "bosta"
             ]
             if any(word in frase.lower() for word in censuraWords):
                 await ctx.send(

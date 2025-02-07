@@ -18,7 +18,7 @@ class Respostas(commands.Cog):
             'NUH UH!', ':)', 
             'Talvez exista a possibilidade de quem sabe possivelmente se Deus quiser provavelmente aconteça que por acaso possa ser que seja verdade...'
         ]
-        pesos = [5,5,5,5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 2, 2, 0.5, 1]
+        pesos = [5,5,5,5,5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 2, 2, 0.5, 1]
         mensagem_escolhida = random.choices(mensagens, weights=pesos, k=1)[0]
         return mensagem_escolhida
     

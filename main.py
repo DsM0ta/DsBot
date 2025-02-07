@@ -368,7 +368,7 @@ async def on_message(message):
         if 'cdn.discordapp.com' in message.content and message.content.lower().endswith('.gif'):
             return
         
-        censuraNum = ["581", "582", "580", "583", "584", "585","586","587","588","589","590","58","5", "quinhentos", "kinhentos", "quinhento", "quinentos", "quinento", "kinhento", "qinhentos"]
+        censuraNum = ["59","60","61","62","63","64" ,"65","66","67","68","69","70","71","72","73","74","75", "76","77","78","79","80","81","82","83","84","85","86","87","88","89","90", "quinhentos", "kinhentos", "quinhento", "quinentos", "quinento", "kinhento", "qinhentos", "seiscentos"]
         if any(char in message.content for char in censuraNum):
             await message.delete()
             print("Número enviado no slowmode:",message.content)
